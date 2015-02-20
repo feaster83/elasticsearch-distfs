@@ -7,6 +7,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.*;
 
 import static org.elasticsearch.rest.RestRequest.Method.GET;
+import static org.elasticsearch.rest.RestStatus.OK;
 
 public class ResponseHandler extends BaseRestHandler {
 
@@ -21,8 +22,9 @@ public class ResponseHandler extends BaseRestHandler {
 
     @Override
     protected void handleRequest(RestRequest request, RestChannel channel, Client client) throws Exception {
-        logger.debug("ResponseHandler called ");
+        logger.debug("ResponseHandler called");
 
-
+        BytesRestResponse restResponse = new BytesRestResponse(OK, "text/html", "<html><head><title>DistFS active</title></head><body>DistFS is active</body></html>");
+        channel.sendResponse(restResponse);
     }
 }
