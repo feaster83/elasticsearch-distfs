@@ -1,0 +1,13 @@
+POST these files to Elasticsearch to the following URL's
+
+http://localhost:9200/fs/files/examplehtml1
+
+http://localhost:9200/fs/files/exampleimage1
+
+---------------------------------------------------
+
+Open:
+
+http://localhost:9200/_distfs/fs/files/examplehtml1
+
+to see a html file with a image
