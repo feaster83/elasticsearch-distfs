@@ -7,6 +7,7 @@ import org.elasticsearch.plugins.AbstractPlugin;
 import java.util.Collection;
 
 public class DistFSPlugin extends AbstractPlugin {
+    public final static String PLUGIN_PATH = "_distfs";
 
     @Override
     public String name() {
