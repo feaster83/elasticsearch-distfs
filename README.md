@@ -14,7 +14,7 @@ POST http://localhost:9200/_distfs/fs/files/image.jpg
 
 To GET a file:
 
-GET http://localhost:9200/_distfs/<index>/<type>/<id> 
+GET http://localhost:9200/_distfs/&lt;index&gt;/&lt;type&gt;/&lt;id&gt;
 
 For example
 
