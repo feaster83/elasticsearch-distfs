@@ -9,6 +9,14 @@ mvn package
 # Install
 bin/plugin --u file:///path/to/plugin.zip --i distfs
 
+# Run with Maven
+
+First time or after a mvn clean do ** mvn package **
+
+Run Elasticsearch with the command:
+
+** mvn exec:java ** --> Elasticsearch will run on localhost:9200
+
 # Run/Debug in IntelliJ
 Add run configuration:
 
