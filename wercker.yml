@@ -1,4 +1,4 @@
-box: ruudk/ubuntu14.04@1.0.0
+box: mihkels/java8-oracle@0.0.1
 
 build:
     steps:
