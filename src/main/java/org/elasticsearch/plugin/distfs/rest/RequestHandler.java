@@ -85,6 +85,7 @@ public class RequestHandler extends BaseRestHandler {
         try {
             TikaConfig tika = new TikaConfig();
             Metadata md = new Metadata();
+            md.set(Metadata.RESOURCE_NAME_KEY, request.rawPath());
             MediaType mediaType = tika.getDetector().detect(TikaInputStream.get(request.content().streamInput()), md);
 
             contentType = mediaType.toString();
