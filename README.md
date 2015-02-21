@@ -1,21 +1,21 @@
 # elasticsearch-distfs
 Elasticsearch DistFS plugin - Simple distributed filesystem on Elasticsearch
 
-*** This plugin is only written for educational purpose. Do not use it in production! ***
+***This plugin is only written for educational purpose. Do not use it in production!***
 
 # Build
-mvn package
+**mvn package**
 
 # Install
 bin/plugin --u file:///path/to/plugin.zip --i distfs
 
 # Run with Maven
 
-First time or after a mvn clean do ** mvn package **
+First time or after a **mvn clean** do **mvn package**
 
 Run Elasticsearch with the command:
 
-** mvn exec:java ** --> Elasticsearch will run on localhost:9200
+**mvn exec:java**  --> Elasticsearch will run on localhost:9200
 
 # Run/Debug in IntelliJ
 Add run configuration:
