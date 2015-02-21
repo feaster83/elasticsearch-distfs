@@ -48,10 +48,10 @@ public class RequestHandler extends BaseRestHandler {
     private BytesRestResponse indexContent(RestRequest request, Client client) throws IOException {
 
         String contentType = getContentType(request);
-        String contentBase64 = getContentAsBase64(request);
 
         BytesRestResponse restResponse = null;
         if (StringUtils.isNotBlank(contentType)) {
+           String contentBase64 = getContentAsBase64(request);
            restResponse = addFileToIndex(request, client, contentType, contentBase64);
         } else {
            restResponse = new BytesRestResponse(RestStatus.UNSUPPORTED_MEDIA_TYPE);
