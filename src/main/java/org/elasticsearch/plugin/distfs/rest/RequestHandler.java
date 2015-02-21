@@ -1,6 +1,5 @@
 package org.elasticsearch.plugin.distfs.rest;
 
-
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.io.TikaInputStream;
@@ -17,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.UUID;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import static org.elasticsearch.plugin.distfs.DistFSPlugin.PLUGIN_PATH;
@@ -60,9 +60,12 @@ public class RequestHandler extends BaseRestHandler {
     }
 
     private BytesRestResponse addFileToIndex(RestRequest request, Client client, String contentType, String contentBase64) throws IOException {
+        UUID uuid = java.util.UUID.randomUUID();
+        
         IndexResponse indexResponse = client.prepareIndex(request.param(INDEX), request.param(TYPE), request.param(ID))
                 .setSource(jsonBuilder()
                         .startObject()
+                        .field(DocumentField.UUID, uuid.toString())
                         .field(DocumentField.CONTENT_TYPE, contentType)
                         .field(DocumentField.CONTENT, contentBase64)
                         .endObject())
@@ -71,9 +74,9 @@ public class RequestHandler extends BaseRestHandler {
 
         BytesRestResponse restResponse;
         if (indexResponse.isCreated()) {
-            restResponse = new BytesRestResponse(RestStatus.CREATED);
+            restResponse = new BytesRestResponse(RestStatus.CREATED, uuid.toString());
         } else if (indexResponse.getVersion() > 0) {
-            restResponse = new BytesRestResponse(RestStatus.ACCEPTED);
+            restResponse = new BytesRestResponse(RestStatus.ACCEPTED, uuid.toString());
         } else {
             restResponse = new BytesRestResponse(RestStatus.BAD_REQUEST);
         }
