@@ -13,6 +13,7 @@ bin/plugin --u file:///path/to/plugin.zip --i distfs
 Add run configuration:
 
 Main class: org.elasticsearch.bootstrap.Bootstrap
+
 VM Options: -Des.foreground=yes
 
 # Usage
