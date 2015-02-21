@@ -1,4 +1,4 @@
-box: wercker/default
+box: ruudk/ubuntu14.04@1.0.0
 
 build:
     steps:
