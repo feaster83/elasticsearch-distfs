@@ -3,6 +3,9 @@ Elasticsearch DistFS plugin - Simple distributed filesystem on Elasticsearch
 
 ***This plugin is only written for educational purpose. Do not use it in production!***
 
+# Project build status
+[![wercker status](https://app.wercker.com/status/1d899d8dce7aae8c7887d2d38af45830/m/master "wercker status")](https://app.wercker.com/project/bykey/1d899d8dce7aae8c7887d2d38af45830)
+
 # Build
 **mvn package**
 
