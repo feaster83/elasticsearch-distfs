@@ -1,16 +1,17 @@
 package org.elasticsearch.plugin.distfs.rest;
 
 
+import net.sf.jmimemagic.*;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.lang3.StringUtils;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLConnection;
 import java.util.Base64;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
@@ -41,10 +42,20 @@ public class RequestHandler extends BaseRestHandler {
     }
 
     private BytesRestResponse indexContent(RestRequest request, Client client) throws IOException {
-        BytesRestResponse restResponse;InputStream is = request.content().streamInput();
-        String contentType = URLConnection.guessContentTypeFromStream(is);
-        String contentBase64 = getContentAsBase64(is);
 
+        String contentType = getContentType(request);
+        String contentBase64 = getContentAsBase64(request);
+
+        BytesRestResponse restResponse = null;
+        if (StringUtils.isNotBlank(contentType)) {
+           restResponse = addFileToIndex(request, client, contentType, contentBase64);
+        } else {
+           restResponse = new BytesRestResponse(RestStatus.UNSUPPORTED_MEDIA_TYPE);
+        }
+        return restResponse;
+    }
+
+    private BytesRestResponse addFileToIndex(RestRequest request, Client client, String contentType, String contentBase64) throws IOException {
         IndexResponse indexResponse = client.prepareIndex(request.param(INDEX), request.param(TYPE), request.param(ID))
                 .setSource(jsonBuilder()
                         .startObject()
@@ -54,7 +65,7 @@ public class RequestHandler extends BaseRestHandler {
                 .execute()
                 .actionGet();
 
-
+        BytesRestResponse restResponse;
         if (indexResponse.isCreated()) {
             restResponse = new BytesRestResponse(RestStatus.CREATED);
         } else if (indexResponse.getVersion() > 0) {
@@ -65,7 +76,23 @@ public class RequestHandler extends BaseRestHandler {
         return restResponse;
     }
 
-    private String getContentAsBase64(InputStream is) throws IOException {
+    private String getContentType(RestRequest request) {
+        String contentType = null;
+        try {
+           MagicMatch m = Magic.getMagicMatch(request.content().toBytes());
+           contentType = m.getMimeType();
+        } catch (MagicParseException e) {
+           logger.error(e.getMessage(), e);
+        } catch (MagicMatchNotFoundException e) {
+           logger.error(e.getMessage(), e);
+        } catch (MagicException e) {
+           logger.error(e.getMessage(), e);
+        }
+        return contentType;
+    }
+
+    private String getContentAsBase64(RestRequest request) throws IOException {
+        InputStream is = request.content().streamInput();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         byte[] chunk = new byte[4096];

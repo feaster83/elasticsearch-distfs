@@ -3,6 +3,19 @@ Elasticsearch DistFS plugin - Simple distributed filesystem on Elasticsearch
 
 *** This plugin is only written for educational purpose. Do not use it in production! ***
 
+# Build
+mvn package
+
+# Install
+bin/plugin --u file:///path/to/plugin.zip --i distfs
+
+# Run/Debug in IntelliJ
+Add run configuration:
+
+Main class: org.elasticsearch.bootstrap.Bootstrap
+VM Options: -Des.foreground=yes
+
+# Usage
 Upload a file to the DistFS:
 
 POST http://localhost:9200/_distfs/&lt;index&gt;/&lt;type&gt;/&lt;id&gt; with as content the FILE.
