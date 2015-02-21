@@ -1,13 +1,13 @@
-  box: wercker/default
+box: wercker/default
 
-  build:
-      steps:
-          - script:
-              name: Purge local repository
-              code: dependency:purge-local-repository
-          - script:
-              name: maven clean project
-              code: mvn clean -B
-          - script:
-              name: maven package
-              code: mvn package -B
+build:
+    steps:
+        - script:
+            name: Purge local repository
+            code: dependency:purge-local-repository
+        - script:
+            name: maven clean project
+            code: mvn clean -B
+        - script:
+            name: maven package
+            code: mvn package -B
