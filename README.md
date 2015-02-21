@@ -32,19 +32,36 @@ VM Options: -Des.foreground=yes
 
 ## Usage
 Upload a file to the DistFS:
-
-`POST http://localhost:9200/_distfs/<index>/<type>/<id>` (with as content the FILE)
+```
+POST http://localhost:9200/_distfs/<index>/<type>/<id>` (with as content the FILE)
+```
 
 for example:
+```
+POST http://localhost:9200/_distfs/fs/files/image.jpg
+```
+Response returns permalink-id:
+```
+HTTP/1.1 202 Accepted
+Content-Type: text/plain; charset=UTF-8
+Content-Length: 36
 
-`POST http://localhost:9200/_distfs/fs/files/image.jpg`
-
+ad7ed078-7071-45c7-80c4-cab16849153c
+```
 
 To GET a file:
+```
+GET http://localhost:9200/_distfs/<index>/<type>/<id>
+```
+*or*
 
-`GET http://localhost:9200/_distfs/<index>/<type>/<id>`
+```
+GET http://localhost:9200/_distfs/permalink/<permalink-id>
+```
+
 
 For example
-
-`GET http://localhost:9200/_distfs/fs/files/website1` (returns html for example)
+```
+GET http://localhost:9200/_distfs/fs/files/website1
+```
 
