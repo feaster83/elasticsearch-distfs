@@ -7,7 +7,7 @@ Elasticsearch DistFS plugin - Simple distributed filesystem on Elasticsearch
 [![wercker status](https://app.wercker.com/status/1d899d8dce7aae8c7887d2d38af45830/m/master "wercker status")](https://app.wercker.com/project/bykey/1d899d8dce7aae8c7887d2d38af45830)
 
 # Build
-**mvn package**
+**`mvn package`**
 
 # Install
 Run with plugin executable found in the Elasticsearch bin directory:
@@ -33,7 +33,7 @@ VM Options: -Des.foreground=yes
 # Usage
 Upload a file to the DistFS:
 
-`POST http://localhost:9200/_distfs/<index&gt;/&lt;type&gt;/&lt;id&gt;` with as content the FILE.
+`POST http://localhost:9200/_distfs/<index>/<type>/<id>` (with as content the FILE)
 
 for example:
 
@@ -42,7 +42,7 @@ for example:
 
 To GET a file:
 
-`GET http://localhost:9200/_distfs/&lt;index&gt;/&lt;type&gt;/&lt;id&gt;`
+`GET http://localhost:9200/_distfs/<index>/<type>/<id>`
 
 For example
 
