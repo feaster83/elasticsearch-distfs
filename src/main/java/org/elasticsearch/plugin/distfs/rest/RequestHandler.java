@@ -1,7 +1,11 @@
 package org.elasticsearch.plugin.distfs.rest;
 
 
-import net.sf.jmimemagic.*;
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.io.TikaInputStream;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.inject.Inject;
@@ -79,14 +83,15 @@ public class RequestHandler extends BaseRestHandler {
     private String getContentType(RestRequest request) {
         String contentType = null;
         try {
-           MagicMatch m = Magic.getMagicMatch(request.content().toBytes());
-           contentType = m.getMimeType();
-        } catch (MagicParseException e) {
-           logger.error(e.getMessage(), e);
-        } catch (MagicMatchNotFoundException e) {
-           logger.error(e.getMessage(), e);
-        } catch (MagicException e) {
-           logger.error(e.getMessage(), e);
+            TikaConfig tika = new TikaConfig();
+            Metadata md = new Metadata();
+            MediaType mediaType = tika.getDetector().detect(TikaInputStream.get(request.content().streamInput()), md);
+
+            contentType = mediaType.toString();
+            logger.debug("Content type detected {}", contentType);
+
+        } catch (IOException | TikaException e) {
+            logger.error(e.getMessage(), e);
         }
         return contentType;
     }
