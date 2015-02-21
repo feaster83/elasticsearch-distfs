@@ -5,7 +5,7 @@ Elasticsearch DistFS plugin - Simple distributed filesystem on Elasticsearch
 
 Upload a file to the DistFS:
 
-POST http://localhost:9200/_distfs/<index>/<type>/<id> with as content the FILE.
+POST http://localhost:9200/_distfs/&lt;index&gt;/&lt;type&gt;/&lt;id&gt; with as content the FILE.
 
 for example:
 
