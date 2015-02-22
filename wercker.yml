@@ -6,14 +6,8 @@ build:
             name: Purge local repository
             code: mvn dependency:purge-local-repository -B
         - script:
-            name: maven clean project
+            name: Clean project
             code: mvn clean -B
         - script:
-            name: maven package
+            name: Package
             code: mvn package -B
-
-deploy:
-   steps:
-       - script:
-            name: maven start Elasticsearch including plugin
-            code: mvn exec:java
