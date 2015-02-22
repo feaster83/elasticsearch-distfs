@@ -32,36 +32,46 @@ VM Options: -Des.foreground=yes
 
 ## Usage
 Upload a file to the DistFS:
-```
-POST http://localhost:9200/_distfs/<index>/<type>/<id>` (with as content the FILE)
-```
 
-for example:
-```
-POST http://localhost:9200/_distfs/fs/files/image.jpg
-```
-Response returns permalink-id:
-```
-HTTP/1.1 202 Accepted
-Content-Type: text/plain; charset=UTF-8
-Content-Length: 36
+```POST http://localhost:9200/_distfs/<index>/<type>/<file path>``` *(with the file as content)*
 
-ad7ed078-7071-45c7-80c4-cab16849153c
-```
-
-To GET a file:
-```
-GET http://localhost:9200/_distfs/<index>/<type>/<id>
-```
 *or*
 
-```
-GET http://localhost:9200/_distfs/permalink/<permalink-id>
-```
+```POST http://localhost:9200/_distfs/<index>/<type>?path=<file path>``` *(with the file as content)*
+
+
+for example:
+
+```POST http://localhost:9200/_distfs/fs/files/content/images/myimage.jpg```
+
+```POST http://localhost:9200/_distfs/fs/files?path=content/images/myimage.jpg```
+
+Response returns permalink-id:
+
+    HTTP/1.1 202 Accepted
+    Content-Type: text/plain; charset=UTF-8 
+    Content-Length: 36
+
+    ad7ed078-7071-45c7-80c4-cab16849153c
+
+
+### To GET a file:
+
+```GET http://localhost:9200/_distfs/<index>/<type>/<file path>```
+
+*or*
+
+```GET http://localhost:9200/_distfs/<index>/<type>?path=<file path>```
+
+*or*
+
+```GET http://localhost:9200/_distfs/permalink/<permalink-id>```
 
 
 For example
-```
-GET http://localhost:9200/_distfs/fs/files/website1
-```
 
+```GET http://localhost:9200/_distfs/fs/files/content/images/myimage.jpg```
+
+```GET http://localhost:9200/_distfs/fs/files?path=content/images/myimage.jpg```
+
+```GET http://localhost:9200/_distfs/permalink/a7c559eb-f286-4463-af70-c088b7d3454b```

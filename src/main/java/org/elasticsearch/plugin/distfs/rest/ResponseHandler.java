@@ -1,6 +1,7 @@
 package org.elasticsearch.plugin.distfs.rest;
 
-import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
@@ -25,8 +26,9 @@ public class ResponseHandler extends BaseRestHandler {
     @Inject
     public ResponseHandler(Settings settings, Client client, RestController controller) {
         super(settings, controller, client);
+        controller.registerFilter(new RequestActionFilter());
         controller.registerHandler(GET, PLUGIN_PATH, this);
-        controller.registerHandler(GET, PLUGIN_PATH + "/{" + INDEX + "}/{" + TYPE + "}/{" + ID + "}", this);
+        controller.registerHandler(GET, PLUGIN_PATH + "/{" + INDEX + "}/{" + TYPE + "}", this);
         controller.registerHandler(GET, PLUGIN_PATH + "/permalink/{" + Param.UUID + "}", this);
     }
 
@@ -48,13 +50,18 @@ public class ResponseHandler extends BaseRestHandler {
                 documentSourceMap = searchHits.getHits()[0].getSource();
             }
         } else {
-            // Request by path: resolve document by INDEX, TYPE and ID
-            GetResponse response = client.prepareGet(request.param(INDEX), request.param(TYPE), request.param(ID))
-                .execute()
-                .actionGet();
 
-            if (response.isExists()) {
-                documentSourceMap = response.getSourceAsMap();
+            // TODO: improve query/lookup
+            SearchResponse response = client.prepareSearch(request.param(INDEX))
+                    .setTypes(request.param(TYPE))
+                    .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                    .setQuery(QueryBuilders.matchQuery(DocumentField.PATH, request.param(PATH)))
+                    .execute()
+                    .actionGet();
+
+            if (response.getHits().getTotalHits() > 0) {
+                // TODO: throw error if more than 1 hits?
+                documentSourceMap = response.getHits().getAt(0).getSource();
             }
         }
 
