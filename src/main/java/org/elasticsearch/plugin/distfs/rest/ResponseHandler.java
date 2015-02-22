@@ -67,7 +67,7 @@ public class ResponseHandler extends BaseRestHandler {
 
         BytesRestResponse restResponse;
         if (documentSourceMap != null) {
-            restResponse = buildValidReponse(documentSourceMap);
+            restResponse = buildValidResponse(documentSourceMap);
         } else {
             restResponse = getNotFoundResponse();
         }
@@ -79,7 +79,7 @@ public class ResponseHandler extends BaseRestHandler {
         return new BytesRestResponse(NOT_FOUND);
     }
 
-    private BytesRestResponse buildValidReponse(Map<String, Object> sourceMap) {
+    private BytesRestResponse buildValidResponse(Map<String, Object> sourceMap) {
         BytesRestResponse restResponse;
         String contentType = (String) sourceMap.get(CONTENT_TYPE);
         String contentBase64 = (String) sourceMap.get(CONTENT);
