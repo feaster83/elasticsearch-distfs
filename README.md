@@ -76,25 +76,25 @@ For example
 
 ```GET http://localhost:9200/_distfs/permalink/a7c559eb-f286-4463-af70-c088b7d3454b```
 
-## Execute command on directory 
+## Execute command on path (directory or file) 
 
 ```GET http://localhost:9200/_distfs/<index>/<type>/<file path>?cmd=<command>```
 
-*Currently only a kind of *ls* command is supported*
+
 ### Commands
 
-#### LS - Display directory 
+#### LS command - Display directory 
 
-```GET http://localhost:9200/_distfs/<index>/<type>/<file path>?cmd=ls```
+```GET http://localhost:9200/_distfs/<index>/<type>/<dir path>?cmd=ls```
 
 Example of output (navigation can be done by clicking the items):
 
     Index of /
    
-    [] ..
-    [] images
-    [] js
-    [] index.html
-    [] README.txt
+    [+] ..
+    [+] images
+    [+] js
+    [-] index.html
+    [-] README.txt
    
    
