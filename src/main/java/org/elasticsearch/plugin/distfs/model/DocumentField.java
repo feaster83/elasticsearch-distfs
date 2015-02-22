@@ -1,4 +1,4 @@
-package org.elasticsearch.plugin.distfs.rest;
+package org.elasticsearch.plugin.distfs.model;
 
 public final class DocumentField {
     public final static String CONTENT_TYPE = "content-type";

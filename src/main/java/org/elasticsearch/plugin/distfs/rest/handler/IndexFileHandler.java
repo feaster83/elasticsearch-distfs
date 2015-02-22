@@ -1,4 +1,4 @@
-package org.elasticsearch.plugin.distfs.rest;
+package org.elasticsearch.plugin.distfs.rest.handler;
 
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.exception.TikaException;
@@ -13,6 +13,7 @@ import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.lang3.StringUtils;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.plugin.distfs.model.DocumentField;
 import org.elasticsearch.rest.*;
 
 import java.io.ByteArrayOutputStream;
@@ -26,17 +27,17 @@ import static org.elasticsearch.plugin.distfs.DistFSPlugin.PLUGIN_PATH;
 import static org.elasticsearch.plugin.distfs.rest.Param.*;
 import static org.elasticsearch.rest.RestRequest.Method.POST;
 
-public class RequestHandler extends BaseRestHandler {
+public class IndexFileHandler extends BaseRestHandler {
 
     @Inject
-    public RequestHandler(Settings settings, Client client, RestController controller) {
+    public IndexFileHandler(Settings settings, Client client, RestController controller) {
         super(settings, controller, client);
         controller.registerHandler(POST, PLUGIN_PATH + "/{" + INDEX + "}/{" + TYPE + "}", this);
     }
 
     @Override
     protected void handleRequest(RestRequest request, RestChannel channel, Client client) throws Exception {
-        logger.debug("RequestHandler called");
+        logger.debug("IndexFileHandler called");
 
         BytesRestResponse restResponse = null;
         if (request.hasContent()) {

@@ -1,6 +1,7 @@
-package org.elasticsearch.plugin.distfs.rest;
+package org.elasticsearch.plugin.distfs.rest.filter;
 
 import org.elasticsearch.http.netty.NettyHttpRequest;
+import org.elasticsearch.plugin.distfs.rest.Param;
 import org.elasticsearch.rest.RestChannel;
 import org.elasticsearch.rest.RestFilter;
 import org.elasticsearch.rest.RestFilterChain;
@@ -16,7 +17,9 @@ public class RequestActionFilter extends RestFilter {
 
     @Override
     public void process(RestRequest request, RestChannel channel, RestFilterChain filterChain) throws Exception {
-        if (request.path().startsWith("/" + PLUGIN_PATH)) {
+        if (request.path().startsWith("/" + PLUGIN_PATH)
+                && !request.path().startsWith("/" + PLUGIN_PATH + "/permalink")) {
+
             Pattern p = Pattern.compile("^(\\/"+ PLUGIN_PATH + "\\/[^\\/]+\\/[^\\/]+)([^?]+)");
             Matcher m = p.matcher(request.path());
             if (m.matches()) {

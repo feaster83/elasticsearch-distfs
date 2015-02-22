@@ -1,15 +1,15 @@
 package org.elasticsearch.plugin.distfs;
 
 import org.elasticsearch.common.inject.AbstractModule;
-import org.elasticsearch.plugin.distfs.rest.RequestHandler;
-import org.elasticsearch.plugin.distfs.rest.ResponseHandler;
+import org.elasticsearch.plugin.distfs.rest.handler.IncomingRequestHandler;
+import org.elasticsearch.plugin.distfs.rest.handler.IndexFileHandler;
 
 public class DistFSRestModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(ResponseHandler.class).asEagerSingleton();
-        bind(RequestHandler.class).asEagerSingleton();
+        bind(IncomingRequestHandler.class).asEagerSingleton();
+        bind(IndexFileHandler.class).asEagerSingleton();
 
     }
 
