@@ -11,3 +11,8 @@ build:
         - script:
             name: Package
             code: mvn package -B
+deploy:
+    steps:
+        - script:
+            name: Update/redeploy demo server
+            code: rhc app restart distfs
