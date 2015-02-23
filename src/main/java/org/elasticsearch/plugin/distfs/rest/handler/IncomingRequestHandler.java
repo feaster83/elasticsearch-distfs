@@ -35,7 +35,7 @@ public class IncomingRequestHandler extends BaseRestHandler {
 
         BaseRestHandler matchingHandler = null;
         if (StringUtils.isNotBlank(command)) {
-            logger.debug("Searching for a shandler that can handle the '{}' command.", request.param(Param.CMD));
+            logger.debug("Searching for a handler that can handle the '{}' command.", request.param(Param.CMD));
             matchingHandler = commandHandlers.get(command);
         }
 
