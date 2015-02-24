@@ -1,13 +1,7 @@
-box: mihkels/java8-oracle@0.0.1
+box: feaster83/java8-oracle@1.0
 
 build:
     steps:
-        - script:
-            name: Purge local repository
-            code: mvn dependency:purge-local-repository -B
-        - script:
-            name: Clean project
-            code: mvn clean -B
         - script:
             name: Package
             code: mvn package -B
