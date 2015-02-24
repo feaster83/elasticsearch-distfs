@@ -4,8 +4,7 @@ build:
     steps:
         - script:
             name: Package
-            code: mvn clean package -B -X
-deploy:
+            code: mvn clean package
     steps:
         - script:
             name: Add public key

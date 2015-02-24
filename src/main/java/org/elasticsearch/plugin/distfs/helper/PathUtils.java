@@ -1,10 +1,8 @@
 package org.elasticsearch.plugin.distfs.helper;
 
-import lombok.experimental.UtilityClass;
 import org.elasticsearch.plugin.distfs.model.Directory;
 import org.elasticsearch.plugin.distfs.model.File;
 
-@UtilityClass
 public class PathUtils {
 
     public static String getValidPath(String path) {
