@@ -20,7 +20,7 @@ public class RequestActionFilter extends RestFilter {
         if (request.path().startsWith("/" + PLUGIN_PATH)
                 && !request.path().startsWith("/" + PLUGIN_PATH + "/permalink")) {
 
-            Pattern p = Pattern.compile("^(\\/"+ PLUGIN_PATH + "\\/[^\\/]+\\/[^\\/]+)([^?]+)");
+            Pattern p = Pattern.compile("^(\\/"+ PLUGIN_PATH + "\\/[^\\/]+\\/[^?\\/]*)(.*)");
             Matcher m = p.matcher(request.path());
             if (m.matches()) {
                 Field pathField = NettyHttpRequest.class.getDeclaredField("rawPath");

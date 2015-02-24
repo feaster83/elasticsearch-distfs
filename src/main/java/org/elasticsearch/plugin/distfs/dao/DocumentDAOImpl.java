@@ -7,10 +7,12 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.plugin.distfs.exception.FileNotFoundException;
 import org.elasticsearch.plugin.distfs.helper.FileMapper;
 import org.elasticsearch.plugin.distfs.model.Directory;
-import org.elasticsearch.plugin.distfs.model.File;
 import org.elasticsearch.plugin.distfs.model.DocumentField;
+import org.elasticsearch.plugin.distfs.model.File;
 
 import java.util.Map;
+
+import static org.elasticsearch.plugin.distfs.helper.PathUtils.*;
 
 public class DocumentDAOImpl implements DocumentDAO {
 
@@ -61,23 +63,32 @@ public class DocumentDAOImpl implements DocumentDAO {
                 .actionGet();
 
         if (searchResponse.getHits().getTotalHits() > 0) {
-           Directory directory = new Directory(path);
-           searchResponse.getHits().forEach(hit -> {
-               File file = FileMapper.toFile(hit.getSource());
-               String relativePath = file.getPath().substring(path.length());
-               if (relativePath.indexOf("/", 1) > 0) {
-                  // File not at this directory level
+           String directoryPath = getValidPath(path);
 
-                  Directory subDir = new Directory(relativePath.substring(0, file.getPath().indexOf("/", 1)));
-                  subDir.setName(relativePath.substring(0, file.getPath().indexOf("/", 1)));
-                  directory.getDirectories().add(subDir);
-               } else {
-                  directory.add(file);
-               }
-           });
+           Directory directory = convertToDirectory(searchResponse, directoryPath);
+
            return directory;
         } else {
            throw new FileNotFoundException();
         }
+    }
+
+    private Directory convertToDirectory(SearchResponse searchResponse, String directoryPath) {
+        Directory directory = new Directory(directoryPath);
+
+        searchResponse.getHits().forEach(hit -> {
+            File file = FileMapper.toFile(hit.getSource());
+            String relativePath = getRelativePath(directory, file);
+            if (isFileInDir(directory, file)) {
+                directory.add(file);
+            } else {
+                // File not at this directory level
+                String subDirName = getFirstRelativeDirName(relativePath);
+                Directory subDir = new Directory(directoryPath + "/" + subDirName);
+                subDir.setName(subDirName);
+                directory.add(subDir);
+            }
+        });
+        return directory;
     }
 }

@@ -1,21 +1,22 @@
 package org.elasticsearch.plugin.distfs.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class File implements Comparable<File> {
     private String uuid;
     private String path;
     private String contentType;
     private String content;
+    private String fileName;
 
-    public String getFilename() {
-        return path.substring(path.lastIndexOf("/") + 1);
+    public void setPath(String path) {
+        this.path = path;
+        this.fileName = path.substring(path.lastIndexOf("/") + 1);
     }
 
     @Override

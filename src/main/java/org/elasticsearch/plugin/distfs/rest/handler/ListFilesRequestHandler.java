@@ -33,7 +33,6 @@ public class ListFilesRequestHandler extends BaseRestHandler {
     protected void handleRequest(RestRequest request, RestChannel channel, Client client) throws Exception {
         logger.debug("ListFilesRequestHandler called");
 
-
         final String directoryPath = request.param(Param.PATH);
 
         RestResponse response;
@@ -67,12 +66,12 @@ public class ListFilesRequestHandler extends BaseRestHandler {
         ArrayList fileList = new ArrayList();
         fileList.add(getFileDef("up", "..", "..", "", ""));
 
-        directory.getDirectories().forEach(subdir ->
-            fileList.add(getFileDef("dir", subdir.getName(), subdir.getPath(), "", ""))
+        directory.getSubDirectories().forEach(subdir ->
+                        fileList.add(getFileDef("dir", subdir.getName(), subdir.getPath(), "", ""))
         );
 
         directory.getFiles().forEach(file ->
-            fileList.add(getFileDef("file", file.getFilename(), file.getFilename(), file.getContentType(), file.getUuid()))
+            fileList.add(getFileDef("file", file.getFileName(), file.getPath(), file.getContentType(), file.getUuid()))
         );
 
         VelocityContext context = new VelocityContext();
@@ -91,8 +90,8 @@ public class ListFilesRequestHandler extends BaseRestHandler {
 
     private Map<String, String> getFileDef(String type, String filename, String filepath, String contentType, String uuid) {
         Map<String, String> fileDef = new HashMap();
-        fileDef.put("filename", filename.startsWith("/") ? filename.substring(1) : filename);
-        fileDef.put("filepath", filename.startsWith("/") ? filename.substring(1) : filename);
+        fileDef.put("filename", filename);
+        fileDef.put("filepath", filepath);
         fileDef.put("filetype", type);
         fileDef.put("contentType", contentType);
         fileDef.put("uuid", uuid);
