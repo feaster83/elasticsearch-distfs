@@ -1,4 +1,4 @@
-box: feaster83/java8-oracle@1.0
+box: feaster83/java8-oracle@1.0.2
 
 build:
     steps:
@@ -7,6 +7,9 @@ build:
             code: mvn package -B
 deploy:
     steps:
+        - script:
+            name: Add public key
+            code: echo $RSA_PUB_KEY >> cat ~/.ssh/id_rsa.pub
         - script:
             name: Update/redeploy demo server
             code: rhc app restart distfs
