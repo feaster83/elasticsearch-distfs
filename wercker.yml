@@ -4,7 +4,7 @@ build:
     steps:
         - script:
             name: Package
-            code: mvn package -B
+            code: mvn clean package -B -X
 deploy:
     steps:
         - script:
