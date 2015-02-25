@@ -9,7 +9,7 @@ deploy:
     steps:
         - script:
             name: Configure RedHat Client Tools
-            code: yes yes | rhc setup --server openshift.redhat.com --token $HIDDEN_TOKEN
+            code: yes yes | rhc setup --server openshift.redhat.com --token $HIDDEN_TOKEN | tail -9
         - script:
             name: Restart DEMO server (will also update sources, rebuild, redeploy and fill with demo content!)
-            code: rhc app restart distfs
+            code: yes yes | rhc app restart distfs | tail -n +2
