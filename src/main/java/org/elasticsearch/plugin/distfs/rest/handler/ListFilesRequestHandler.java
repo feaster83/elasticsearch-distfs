@@ -64,7 +64,7 @@ public class ListFilesRequestHandler extends BaseRestHandler {
         ve.init();
 
         ArrayList fileList = new ArrayList();
-        
+
         if (directory.getPath().length() > 1) {
             String pathUp = directory.getEsPath().substring(0, directory.getEsPath().lastIndexOf("/"));
             fileList.add(getFileDef("up", "..", pathUp, "", ""));
