@@ -10,6 +10,7 @@ import java.util.TreeSet;
 @Data
 @NoArgsConstructor
 public class Directory implements Comparable<Directory> {
+    private String esPath;
     private String path;
     private String name;
 
@@ -21,8 +22,9 @@ public class Directory implements Comparable<Directory> {
     @Delegate(types = SimpleDirectoryCollection.class)
     private final Set<Directory> directories = new TreeSet<>();
 
-    public Directory(String path) {
+    public Directory(String path, String esPath) {
         this.path = path;
+        this.esPath = esPath;
     }
 
     public Collection<Directory> getSubDirectories() {

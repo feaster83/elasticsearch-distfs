@@ -33,7 +33,7 @@ public class ListFilesRequestHandler extends BaseRestHandler {
     protected void handleRequest(RestRequest request, RestChannel channel, Client client) throws Exception {
         logger.debug("ListFilesRequestHandler called");
 
-        final String directoryPath = request.param(Param.PATH);
+        String directoryPath = request.param(Param.PATH);
 
         RestResponse response;
         try {
@@ -64,14 +64,18 @@ public class ListFilesRequestHandler extends BaseRestHandler {
         ve.init();
 
         ArrayList fileList = new ArrayList();
-        fileList.add(getFileDef("up", "..", "..", "", ""));
+        
+        if (directory.getPath().length() > 1) {
+            String pathUp = directory.getEsPath().substring(0, directory.getEsPath().lastIndexOf("/"));
+            fileList.add(getFileDef("up", "..", pathUp, "", ""));
+        }
 
         directory.getSubDirectories().forEach(subdir ->
-                        fileList.add(getFileDef("dir", subdir.getName(), subdir.getPath(), "", ""))
+                        fileList.add(getFileDef("dir", subdir.getName(), subdir.getEsPath(), "", ""))
         );
 
         directory.getFiles().forEach(file ->
-            fileList.add(getFileDef("file", file.getFileName(), file.getPath(), file.getContentType(), file.getUuid()))
+            fileList.add(getFileDef("file", file.getFileName(), directory.getEsPath() + "/" + file.getFileName(), file.getContentType(), file.getUuid()))
         );
 
         VelocityContext context = new VelocityContext();

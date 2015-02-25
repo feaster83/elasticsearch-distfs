@@ -1,5 +1,7 @@
 package org.elasticsearch.plugin.distfs.helper;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.elasticsearch.plugin.distfs.model.File;
 import org.elasticsearch.plugin.distfs.model.DocumentField;
 
@@ -8,7 +10,9 @@ import java.util.TreeMap;
 
 import static org.elasticsearch.plugin.distfs.helper.PathUtils.getValidPath;
 
-public class FileMapper {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class FileMapper {
+
     public static File toFile(Map<String, Object> data) {
         File file = new File();
         file.setUuid((String) data.get(DocumentField.UUID));

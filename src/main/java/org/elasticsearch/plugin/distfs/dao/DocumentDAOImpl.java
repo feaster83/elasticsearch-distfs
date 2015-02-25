@@ -5,14 +5,17 @@ import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.plugin.distfs.exception.FileNotFoundException;
+import org.elasticsearch.plugin.distfs.helper.DirectoryMapper;
 import org.elasticsearch.plugin.distfs.helper.FileMapper;
 import org.elasticsearch.plugin.distfs.model.Directory;
 import org.elasticsearch.plugin.distfs.model.DocumentField;
 import org.elasticsearch.plugin.distfs.model.File;
 
 import java.util.Map;
+import java.util.TreeSet;
 
-import static org.elasticsearch.plugin.distfs.helper.PathUtils.*;
+import static org.elasticsearch.plugin.distfs.helper.PathUtils.getValidESPath;
+import static org.elasticsearch.plugin.distfs.helper.PathUtils.getValidPath;
 
 public class DocumentDAOImpl implements DocumentDAO {
 
@@ -21,7 +24,7 @@ public class DocumentDAOImpl implements DocumentDAO {
         // TODO: improve query/lookup
         SearchResponse response = client.prepareSearch(index)
                 .setTypes(type)
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setSearchType(SearchType.QUERY_THEN_FETCH)
                 .setQuery(QueryBuilders.matchQuery(DocumentField.PATH, path))
                 .execute()
                 .actionGet();
@@ -64,31 +67,21 @@ public class DocumentDAOImpl implements DocumentDAO {
 
         if (searchResponse.getHits().getTotalHits() > 0) {
            String directoryPath = getValidPath(path);
+           String esPath = getValidESPath(path, index, type);
 
-           Directory directory = convertToDirectory(searchResponse, directoryPath);
-
+           Directory directory = convertToDirectory(searchResponse, directoryPath, esPath);
            return directory;
         } else {
            throw new FileNotFoundException();
         }
     }
 
-    private Directory convertToDirectory(SearchResponse searchResponse, String directoryPath) {
-        Directory directory = new Directory(directoryPath);
+    private Directory convertToDirectory(SearchResponse searchResponse, String directoryPath, String esPath) {
+        TreeSet<File> files = new TreeSet<>();
+        searchResponse.getHits().forEach(hit -> files.add(FileMapper.toFile(hit.getSource())));
 
-        searchResponse.getHits().forEach(hit -> {
-            File file = FileMapper.toFile(hit.getSource());
-            String relativePath = getRelativePath(directory, file);
-            if (isFileInDir(directory, file)) {
-                directory.add(file);
-            } else {
-                // File not at this directory level
-                String subDirName = getFirstRelativeDirName(relativePath);
-                Directory subDir = new Directory(directoryPath + "/" + subDirName);
-                subDir.setName(subDirName);
-                directory.add(subDir);
-            }
-        });
+        Directory directory = DirectoryMapper.toDirectory(directoryPath, esPath, files);
         return directory;
+
     }
 }
