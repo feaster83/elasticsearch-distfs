@@ -11,4 +11,4 @@ build:
             code: echo $RSA_PUB_KEY >> cat ~/.ssh/id_rsa.pub
         - script:
             name: Update/redeploy demo server
-            code: rhc app restart distfs
+            code: rhc app restart distfs --token $HIDDEN_TOKEN
