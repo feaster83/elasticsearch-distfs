@@ -5,10 +5,11 @@ build:
         - script:
             name: Package
             code: mvn clean package
+deploy:
     steps:
         - script:
             name: Configure RedHat Client Tools
-            code: rhc --clean setup --server openshift.redhat.com --token $HIDDEN_TOKEN
+            code: rhc setup --server openshift.redhat.com --token $HIDDEN_TOKEN
         - script:
             name: Restart DEMO server (will also update sources, rebuild, redeploy and fill with demo content!)
             code: rhc app restart distfs
