@@ -61,11 +61,13 @@ body {
 .ui-layout-west {
     overflow: auto;
     overflow-x: hidden;
+    overflow-y: hidden;
 
 }
 
 .ui-layout-west iframe {
     scrolling: no;
+
 }
 
 iframe {

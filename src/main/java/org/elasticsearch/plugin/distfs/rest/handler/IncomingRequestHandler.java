@@ -27,6 +27,7 @@ public class IncomingRequestHandler extends BaseRestHandler {
 
         defaultHandler = new RequestFileHandler(this, settings, client, controller);
         commandHandlers.put("ls", new ListFilesRequestHandler(this, settings, client, controller));
+        commandHandlers.put("editorls", new ListFiles4EditorRequestHandler(this, settings, client, controller));
     }
 
     @Override

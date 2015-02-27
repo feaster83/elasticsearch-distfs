@@ -1,4 +1,6 @@
-
+body {
+    margin: 0px;
+}
 
 .codemirror-ui-button-frame{
 	border:0px solid #ccc;
