@@ -15,4 +15,10 @@
             </excludes>
         </dependencySet>
     </dependencySets>
+    <fileSets>
+        <fileSet>
+            <outputDirectory>_site</outputDirectory>
+            <directory>src/site</directory>
+        </fileSet>
+    </fileSets>
 </assembly>

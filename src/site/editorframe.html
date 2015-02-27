@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File editor</title>
+
+    <link type="text/css" rel="stylesheet" href="jquery/css/layout-default-latest.css" />
+    <script type="text/javascript" src="jquery/js/jquery-latest.js"></script>
+    <script type="text/javascript" src="jquery/js/jquery.layout-latest.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('body').layout({
+
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="ui-layout-center">
+    <iframe scrolling="no" src="http://localhost:9200/_plugin/distfs/editor.html?file=http://localhost:9200/_distfs/fs/cm/wp-content/plugins/wp-ajax-edit-comments/css/colorbox/colorbox.css"></iframe>
+</div>
+<div class="ui-layout-north">DistFS File Editor</div>
+<div class="ui-layout-south"><strong>File loaded in editor: </strong>http://localhost:9200/_distfs/fs/cm/wp-content/plugins/wp-ajax-edit-comments/css/colorbox/colorbox.css</div>
+<div class="ui-layout-east"></div>
+<div class="ui-layout-west"><iframe scrolling="no" src="http://localhost:9200/_distfs/fs/cm/?cmd=ls"></iframe></div>
+</body>
+</html>

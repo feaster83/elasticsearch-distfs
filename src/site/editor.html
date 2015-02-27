@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+    <title>CodeMirror Example : Full screen editor</title>
+    <meta charset="utf-8"/>
+
+    <script src="protoype/prototype.js"></script>
+
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="codemirror/addon/display/fullscreen.css">
+    <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>
+    <script type="text/javascript" src="codemirror/mode/javascript/javascript.js"></script>
+    <script type="text/javascript" src="codemirror/addon/mode/loadmode.js"></script>
+    <script type="text/javascript" src="codemirror/mode/meta.js"></script>
+    <script src="codemirror/addon/display/fullscreen.js"></script>
+
+    <script type="text/javascript" src="codemirror-ui/js/codemirror-ui.js"></script>
+    <link rel="stylesheet" href="codemirror-ui/css/codemirror-ui.css" type="text/css" media="screen" />
+
+</head>
+<body>
+
+<textarea id="code" name="code" ></textarea>
+
+<script>
+    var editor;
+    var editorUI
+
+    window.onload = function() {
+        var textarea = document.getElementById('code');
+        var codeMirrorOptions = {
+            mode: "javascript",
+            lineNumbers: true,
+            lineWrapping: true,
+            viewportMargin: Infinity
+        };
+
+        var uiOptions = {
+            path : 'codemirror-ui/js/',
+            imagePath: "codemirror-ui/images/silk",
+            searchMode : 'inline',
+            buttons : ['save','undo','redo','jump','reindent','about'],
+                saveCallback : saveDocument
+        };
+
+        editorUI = new CodeMirrorUI(textarea,uiOptions,codeMirrorOptions);
+        editor = editorUI.mirror;
+
+        loadForm();
+
+    };
+
+    function saveDocument() {
+        alert('save file here');
+    }
+
+    function loadForm() {
+        var val = document.URL.toQueryParams();
+        var fileToOpen = val.file;
+
+        new Ajax.Request(fileToOpen, {
+            method:'get',
+            onSuccess: function(transport) {
+                editor.setValue(transport.responseText);
+
+                var contentType = transport.getResponseHeader('Content-Type');
+
+                if (contentType == 'text/plain') {
+                    var info = CodeMirror.findModeByFileName(fileToOpen);
+                } else {
+                    var info = CodeMirror.findModeByMIME(contentType);
+                }
+                if (info) {
+                    mode = info.mode;
+                    spec = info.mime;
+                }
+
+                editor.setOption("mode", spec);
+                CodeMirror.autoLoadMode(editor, mode);
+                CodeMirror.setSize("100%", "100%");
+                CodeMirror.refresh();
+            }
+        });
+    }
+
+
+</script>
+
+<script language="text/javascript">
+
+</script>
+</body>
+</html>

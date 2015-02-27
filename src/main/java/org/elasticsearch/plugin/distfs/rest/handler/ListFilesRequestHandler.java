@@ -5,8 +5,6 @@ import org.apache.tika.mime.MediaType;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.plugin.distfs.exception.FileNotFoundException;
@@ -58,11 +56,6 @@ public class ListFilesRequestHandler extends BaseRestHandler {
     private BytesRestResponse buildValidResponse(Directory directory) {
         BytesRestResponse restResponse;
 
-        VelocityEngine ve = new VelocityEngine();
-        ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
-        ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-        ve.init();
-
         ArrayList fileList = new ArrayList();
 
         if (directory.getPath().length() > 1) {
@@ -77,6 +70,10 @@ public class ListFilesRequestHandler extends BaseRestHandler {
         directory.getFiles().forEach(file ->
             fileList.add(getFileDef("file", file.getFileName(), directory.getEsPath() + "/" + file.getFileName(), file.getContentType(), file.getUuid()))
         );
+
+
+        VelocityEngine ve = new VelocityEngine();
+        ve.init("config/velocity.properties");
 
         VelocityContext context = new VelocityContext();
         context.put("directoryName", directory.getPath());
