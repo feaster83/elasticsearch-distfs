@@ -14,17 +14,18 @@
         });
 
         function openFile(file) {
-            document.getElementById("editor").setAttribute("src", "http://localhost:9200/_plugin/distfs/editor.html?file=" + file);
+            $("#editor").attr("src","http://localhost:9200/_plugin/distfs/editor.html?file=" + file);
+            $("#fileopened").text(file);
         }
     </script>
 </head>
 <body>
 <div class="ui-layout-center">
-    <iframe id="editor" scrolling="no" src="http://localhost:9200/_plugin/distfs/editor.html?file=http://localhost:9200/_distfs/fs/cm/wp-content/plugins/wp-ajax-edit-comments/css/colorbox/colorbox.css"></iframe>
+    <iframe id="editor" scrolling="no" src="http://localhost:9200/_plugin/distfs/editor.html?file=http://localhost:9200/_distfs/fs/va/wp-content/plugins/wp-ajax-edit-comments/css/colorbox/colorbox.css"></iframe>
 </div>
 <div class="ui-layout-north">DistFS File Editor</div>
-<div class="ui-layout-south"><strong>File loaded in editor: </strong>http://localhost:9200/_distfs/fs/cm/wp-content/plugins/wp-ajax-edit-comments/css/colorbox/colorbox.css</div>
+<div class="ui-layout-south"><strong>File loaded in editor: </strong><span id="fileopened"></span></div>
 <div class="ui-layout-east"></div>
-<div class="ui-layout-west"><iframe scrolling="no" src="http://localhost:9200/_distfs/fs/cm/?cmd=editorls"></iframe></div>
+<div class="ui-layout-west"><iframe scrolling="no" src="http://localhost:9200/_distfs/fs/va/?cmd=editorls"></iframe></div>
 </body>
 </html>
