@@ -2,17 +2,15 @@ package org.elasticsearch.plugin.distfs.rest.handler;
 
 import lombok.SneakyThrows;
 import org.apache.tika.mime.MediaType;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.plugin.distfs.exception.FileNotFoundException;
+import org.elasticsearch.plugin.distfs.helper.VelocityHelper;
 import org.elasticsearch.plugin.distfs.model.Directory;
 import org.elasticsearch.plugin.distfs.rest.Param;
 import org.elasticsearch.rest.*;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,20 +69,12 @@ public class ListFilesRequestHandler extends BaseRestHandler {
             fileList.add(getFileDef("file", file.getFileName(), directory.getEsPath() + "/" + file.getFileName(), file.getContentType(), file.getUuid()))
         );
 
-
-        VelocityEngine ve = new VelocityEngine();
-        ve.init("config/velocity.properties");
-
         VelocityContext context = new VelocityContext();
         context.put("directoryName", directory.getPath());
         context.put("fileList", fileList);
+        String output = VelocityHelper.renderTemplate("file-list.vm", context);
 
-        Template template = ve.getTemplate("templates/velocity/file-list.vm");
-
-        StringWriter writer = new StringWriter();
-        template.merge(context, writer);
-
-        restResponse = new BytesRestResponse(OK, MediaType.TEXT_HTML.toString(), writer.toString());
+        restResponse = new BytesRestResponse(OK, MediaType.TEXT_HTML.toString(), output);
 
         return restResponse;
     }

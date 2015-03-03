@@ -60,7 +60,7 @@ public class DocumentDAOImpl implements DocumentDAO {
 
         SearchResponse searchResponse = client.prepareSearch(index)
                 .setTypes(type)
-                .setQuery(QueryBuilders.wildcardQuery("path", path + "/*"))
+                .setQuery(QueryBuilders.wildcardQuery("path", path + "*"))
                 .setSize(Integer.MAX_VALUE)
                 .execute()
                 .actionGet();

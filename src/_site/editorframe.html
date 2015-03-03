@@ -8,13 +8,13 @@
     <script type="text/javascript" src="jquery/js/jquery.layout-latest.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('body').layout({
+            $("body").layout({
 
             });
         });
 
         function openFile(file) {
-            $("#editor").attr("src","http://localhost:9200/_plugin/distfs/editor.html?file=" + file);
+            $("#editor").attr("src", "http://localhost:9200/_plugin/distfs/editor.html?file=" + file);
             $("#fileopened").text(file);
         }
     </script>

@@ -10,7 +10,6 @@ public class DistFSRestModule extends AbstractModule {
     protected void configure() {
         bind(IncomingRequestHandler.class).asEagerSingleton();
         bind(IndexFileHandler.class).asEagerSingleton();
-
     }
 
 

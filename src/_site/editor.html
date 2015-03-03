@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+    <title>CodeMirror Example : Full screen editor</title>
+    <meta charset="utf-8"/>
+
+
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css">
+
+    <link rel="stylesheet" href="codemirror/addon/display/fullscreen.css">
+    <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>
+    <script type="text/javascript" src="codemirror/mode/javascript/javascript.js"></script>
+    <script type="text/javascript" src="codemirror/addon/mode/loadmode.js"></script>
+    <script type="text/javascript" src="codemirror/mode/meta.js"></script>
+    <script src="codemirror/addon/display/fullscreen.js"></script>
+
+    <script type="text/javascript" src="codemirror-ui/js/codemirror-ui.js"></script>
+    <link rel="stylesheet" href="codemirror-ui/css/codemirror-ui.css" type="text/css" media="screen" />
+
+</head>
+
+<style type="text/css">
+    html{
+        height: 100%;
+    }
+    body {
+        min-height: 100%;
+        height: 100%;
+        background: red;
+    }
+</style>
+<body>
+
+<textarea id="code" name="code" ></textarea>
+
+<script>
+    var editor;
+    var editorUI;
+    var currentFileActive;
+    var currentContentType;
+
+    window.onload = function() {
+        var textarea = document.getElementById('code');
+        var codeMirrorOptions = {
+            mode: "javascript",
+            lineNumbers: true,
+            lineWrapping: true,
+            viewportMargin: Infinity
+        };
+
+        // Press enter inside the object and your new line will be suitably
+        // indented.
+        var keyBindings = {
+            enter: "newline-and-indent",
+            tab: "reindent-selection",
+            ctrl_z: "undo",
+            ctrl_y: "redo",
+            ctrl_s: "save",
+            ctrl_backspace: "undo-for-safari (which blocks ctrl-z)",
+            ctrl_bracket: "highlight-brackets",
+            ctrl_shift_bracket: "jump-to-matching-bracket"
+        };
+
+        var uiOptions = {
+            path : 'codemirror-ui/js/',
+            imagePath: "codemirror-ui/images/silk",
+            searchMode : 'inline',
+            keybindings: keyBindings,
+            buttons : ['save','undo','redo','jump','reindent','about'],
+                saveCallback : saveDocument
+        };
+
+        editorUI = new CodeMirrorUI(textarea,uiOptions,codeMirrorOptions);
+        editor = editorUI.mirror;
+
+        loadForm();
+    };
+
+    function saveDocument() {
+        var succesSave = function (response){
+//            alert('ok-'+data+'-'+respText+'-'+xhr);
+            alert("Details saved successfully!!!");
+        };
+
+        var errorSave = function (request, status, error) {
+            alert(request.responseText);
+        };
+
+        $.ajax({
+            type:"POST",
+            url: currentFileActive,
+            data: editor.getValue(),
+            contentType: currentContentType,
+            success: succesSave
+        });
+
+//        $.post(currentFileActive, editor.getValue(), succesSave, currentContentType);
+    }
+
+    var urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null){
+            return null;
+        }
+        else{
+            return results[1] || 0;
+        }
+    }
+
+    function loadForm() {
+        var fileToOpen = urlParam("file");
+
+        var loadFileCallback = function(data, textstatus,  fullResponse) {
+            editor.setValue(fullResponse.responseText);
+
+            var contentType = fullResponse.getResponseHeader('Content-Type');
+
+            if (contentType == 'text/plain') {
+                var info = CodeMirror.findModeByFileName(fileToOpen);
+            } else {
+                var info = CodeMirror.findModeByMIME(contentType);
+            }
+            if (info) {
+                mode = info.mode;
+                spec = info.mime;
+            }
+
+            editor.setOption("mode", spec);
+            CodeMirror.autoLoadMode(editor, mode);
+
+            currentFileActive = fileToOpen;
+            currentContentType = spec;
+
+            editor.setSize("100%", "100%");
+            editor.refresh();
+        };
+
+        $.get(fileToOpen,loadFileCallback).error("Failed to load document!");
+
+    }
+
+
+</script>
+
+<script type="text/javascript" src="jquery/js/jquery-latest.js"></script>
+</body>
+</html>
