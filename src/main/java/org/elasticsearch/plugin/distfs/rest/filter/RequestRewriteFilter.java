@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import static org.elasticsearch.plugin.distfs.DistFSPlugin.PLUGIN_PATH;
 
-public class RequestActionFilter extends RestFilter {
+public class RequestRewriteFilter extends RestFilter {
 
     @Override
     public void process(RestRequest request, RestChannel channel, RestFilterChain filterChain) throws Exception {

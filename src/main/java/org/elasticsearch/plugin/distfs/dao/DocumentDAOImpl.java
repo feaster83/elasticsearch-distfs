@@ -4,6 +4,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.indices.IndexMissingException;
 import org.elasticsearch.plugin.distfs.exception.FileNotFoundException;
 import org.elasticsearch.plugin.distfs.helper.DirectoryMapper;
 import org.elasticsearch.plugin.distfs.helper.FileMapper;
@@ -21,21 +22,25 @@ public class DocumentDAOImpl implements DocumentDAO {
 
     @Override
     public File findFile(final Client client, final String index, final String type, final String path) throws FileNotFoundException {
-        // TODO: improve query/lookup
-        SearchResponse response = client.prepareSearch(index)
-                .setTypes(type)
-                .setSearchType(SearchType.QUERY_THEN_FETCH)
-                .setQuery(QueryBuilders.matchQuery(DocumentField.PATH, path))
-                .execute()
-                .actionGet();
+      try {
+          // TODO: improve query/lookup
+          SearchResponse response = client.prepareSearch(index)
+                  .setTypes(type)
+                  .setSearchType(SearchType.QUERY_THEN_FETCH)
+                  .setQuery(QueryBuilders.matchQuery(DocumentField.PATH, path))
+                  .execute()
+                  .actionGet();
 
-        if (response.getHits().getTotalHits() > 0) {
-            // TODO: throw error if more than 1 hits?
-            Map<String, Object> documentSourceMap = response.getHits().getAt(0).getSource();
-            return FileMapper.toFile(documentSourceMap);
-        } else {
-            throw new FileNotFoundException();
-        }
+          if (response.getHits().getTotalHits() > 0) {
+              // TODO: throw error if more than 1 hits?
+              Map<String, Object> documentSourceMap = response.getHits().getAt(0).getSource();
+              return FileMapper.toFile(documentSourceMap);
+          } else {
+              throw new FileNotFoundException();
+          }
+      } catch (IndexMissingException ime) {
+          throw new FileNotFoundException();
+      }
     }
 
     @Override

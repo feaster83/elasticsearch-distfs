@@ -42,7 +42,7 @@ public class RequestFileHandler extends BaseRestHandler {
             if (request.param(Param.UUID) != null) {
                 file = documents().findFileByPermalink(client, request.param(UUID));
             } else {
-                file = documents().findFile(client, request.param(INDEX), request.param(TYPE), request.param(PATH));
+                    file = documents().findFile(client, request.param(INDEX), request.param(TYPE), request.param(PATH));
             }
             restResponse = buildValidResponse(file);
          } catch (FileNotFoundException e) {

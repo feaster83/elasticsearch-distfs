@@ -5,7 +5,7 @@ import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.lang3.StringUtils;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.plugin.distfs.rest.Param;
-import org.elasticsearch.plugin.distfs.rest.filter.RequestActionFilter;
+import org.elasticsearch.plugin.distfs.rest.filter.RequestRewriteFilter;
 import org.elasticsearch.rest.BaseRestHandler;
 import org.elasticsearch.rest.RestChannel;
 import org.elasticsearch.rest.RestController;
@@ -21,7 +21,7 @@ public class IncomingRequestHandler extends BaseRestHandler {
     @Inject
     public IncomingRequestHandler(Settings settings, Client client, RestController controller) {
         super(settings, controller, client);
-        controller.registerFilter(new RequestActionFilter());
+        controller.registerFilter(new RequestRewriteFilter());
 
         commandHandlers = new TreeMap<>();
 

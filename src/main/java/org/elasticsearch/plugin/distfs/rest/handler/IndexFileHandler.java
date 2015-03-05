@@ -13,17 +13,19 @@ import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.lang3.StringUtils;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.plugin.distfs.exception.FileNotFoundException;
 import org.elasticsearch.plugin.distfs.model.DocumentField;
+import org.elasticsearch.plugin.distfs.model.File;
 import org.elasticsearch.rest.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.UUID;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import static org.elasticsearch.plugin.distfs.DistFSPlugin.PLUGIN_PATH;
+import static org.elasticsearch.plugin.distfs.helper.Helpers.documents;
 import static org.elasticsearch.plugin.distfs.rest.Param.*;
 import static org.elasticsearch.rest.RestRequest.Method.POST;
 
@@ -65,12 +67,20 @@ public class IndexFileHandler extends BaseRestHandler {
 
     private BytesRestResponse addFileToIndex(RestRequest request, Client client, String contentType, String contentBase64) throws IOException {
         BytesRestResponse restResponse = null;
-        UUID uuid = java.util.UUID.randomUUID();
+
+        String uuid;
+        try {
+            File existingFile = documents().findFile(client, request.param(INDEX), request.param(TYPE), request.param(PATH));
+            uuid = existingFile.getUuid();
+        } catch (FileNotFoundException nfe) {
+            uuid = java.util.UUID.randomUUID().toString();
+        }
 
         boolean prepareIndexResult = prepareIndex(request, client);
 
         if (prepareIndexResult) {
             IndexResponse indexResponse = client.prepareIndex(request.param(INDEX), request.param(TYPE))
+                    .setId(uuid)
                     .setSource(jsonBuilder()
                             .startObject()
                             .field(DocumentField.UUID, uuid.toString())
